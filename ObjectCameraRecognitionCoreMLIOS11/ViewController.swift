@@ -12,12 +12,29 @@ import Vision
 class ViewController: UIViewController {
     
     //MARK: UI
+    let opaqueLayer: UIView = {
+        let v = UIView()
+        v.backgroundColor = .black
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.alpha = 0.4
+        return v
+    }()
+    
     let objectLabel: UILabel = {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.textAlignment = .center
         l.textColor = UIColor.white
         l.font = UIFont.boldSystemFont(ofSize: 25)
+        return l
+    }()
+    
+    let holderLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.textAlignment = .center
+        l.textColor = UIColor.white
+        l.text = "I think this is a..."
         return l
     }()
     
@@ -30,8 +47,25 @@ class ViewController: UIViewController {
         return l
     }()
     
+    let lineview: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor.white
+        return v
+    }()
+    
+    let descriptionLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.textColor = UIColor.white
+        l.textAlignment = .center
+        l.sizeToFit()
+        l.numberOfLines = 0
+        return l
+    }()
+    
     let segmentedControl: UISegmentedControl = {
-        let s = UISegmentedControl(items: ["Low Accuracy", "High Accuracy"])
+        let s = UISegmentedControl(items: ["SqueezeNet", "Resnet50", "GoogleNetPlaces"])
         s.tintColor = .white
         s.translatesAutoresizingMaskIntoConstraints = false
         s.selectedSegmentIndex = 0
@@ -40,6 +74,7 @@ class ViewController: UIViewController {
     }()
     
     private var coreMLModel: MLModel = SqueezeNet().model
+    private var modelDescription: String = "Detects the dominant objects present in an image from a set of 1000 categories such as trees, animals, food, vehicles, people, and more. With an overall footprint of only 4.7 MB, SqueezeNet has a similar level of accuracy as AlexNet but with 50 times fewer parameters. \n\n File size: 5 MB"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +84,30 @@ class ViewController: UIViewController {
     }
     
     private func setUpUI() {
+        
+        view.addSubview(opaqueLayer)
         view.addSubview(objectLabel)
         view.addSubview(accuracyLabel)
         view.addSubview(segmentedControl)
+        view.addSubview(lineview)
+        view.addSubview(descriptionLabel)
+        view.addSubview(holderLabel)
         
         NSLayoutConstraint.activate([
+            
+            opaqueLayer.topAnchor.constraint(equalTo: view.topAnchor),
+            opaqueLayer.leftAnchor.constraint(equalTo: view.leftAnchor),
+            opaqueLayer.rightAnchor.constraint(equalTo: view.rightAnchor),
+            opaqueLayer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            lineview.leftAnchor.constraint(equalTo: view.leftAnchor),
+            lineview.rightAnchor.constraint(equalTo: view.rightAnchor),
+            lineview.heightAnchor.constraint(equalToConstant: 2),
+            lineview.topAnchor.constraint(equalTo: view.topAnchor, constant: 44),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: lineview.bottomAnchor, constant: 10),
+            descriptionLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            descriptionLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             
             segmentedControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5),
             segmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -65,7 +119,12 @@ class ViewController: UIViewController {
             objectLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             objectLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             
-            accuracyLabel.bottomAnchor.constraint(equalTo: objectLabel.topAnchor),
+            holderLabel.leftAnchor.constraint(equalTo: view.leftAnchor),
+            holderLabel.rightAnchor.constraint(equalTo: view.rightAnchor),
+            holderLabel.heightAnchor.constraint(equalToConstant: 30),
+            holderLabel.bottomAnchor.constraint(equalTo: objectLabel.topAnchor),
+            
+            accuracyLabel.bottomAnchor.constraint(equalTo: holderLabel.topAnchor),
             accuracyLabel.heightAnchor.constraint(equalToConstant: 50),
             accuracyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             accuracyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -107,8 +166,13 @@ class ViewController: UIViewController {
         switch self.segmentedControl.selectedSegmentIndex {
         case 0:
             self.coreMLModel = SqueezeNet().model
+            self.modelDescription = "Detects the dominant objects present in an image from a set of 1000 categories such as trees, animals, food, vehicles, people, and more. With an overall footprint of only 4.7 MB, SqueezeNet has a similar level of accuracy as AlexNet but with 50 times fewer parameters. \n\n File size: 5 MB"
         case 1:
             self.coreMLModel = Resnet50().model
+            self.modelDescription = "Detects the dominant objects present in an image from a set of 1000 categories such as trees, animals, food, vehicles, people, and more. \n\n File size: 102.6 MB"
+        case 2:
+            self.coreMLModel = GoogLeNetPlaces().model
+            self.modelDescription = "Detects the scene of an image from 205 categories such as an airport terminal, bedroom, forest, coast, and more. \n\n File size: 24.8 MB"
         default:
             break
         }
@@ -179,9 +243,10 @@ extension ViewController {
         
         print("\(observation.identifier, observation.confidence)")
         DispatchQueue.main.async {
-            self.objectLabel.text = observation.identifier
+            self.objectLabel.text = observation.identifier.components(separatedBy: ",").first
             let percentage = observation.confidence * 100
-            self.accuracyLabel.text = "\(percentage) %"
+            self.accuracyLabel.text = String(format: "%.2f", percentage) + "% Accuracy"
+            self.descriptionLabel.text = self.modelDescription
         }
     }
 }
@@ -189,6 +254,7 @@ extension ViewController {
 enum CoreMLModels {
     case squeezeNet
     case resNet50
+    case googleNetPlaces
 }
 
 /*

@@ -13,6 +13,7 @@
 		7B4DA2241F53B27A0037584A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B4DA2221F53B27A0037584A /* LaunchScreen.storyboard */; };
 		7B640C4A1F53BEE500C0D17C /* SqueezeNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7B640C491F53BEE500C0D17C /* SqueezeNet.mlmodel */; };
 		7B640C4C1F53C1F300C0D17C /* Resnet50.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7B640C4B1F53C1F300C0D17C /* Resnet50.mlmodel */; };
+		7B640C4E1F53D44100C0D17C /* GoogLeNetPlaces.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7B640C4D1F53D44100C0D17C /* GoogLeNetPlaces.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		7B640C481F53BE6D00C0D17C /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = SqueezeNet.mlmodel; path = ../../../../../../Downloads/SqueezeNet.mlmodel; sourceTree = "<group>"; };
 		7B640C491F53BEE500C0D17C /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = SqueezeNet.mlmodel; path = ObjectCameraRecognitionCoreMLIOS11/SqueezeNet.mlmodel; sourceTree = "<group>"; };
 		7B640C4B1F53C1F300C0D17C /* Resnet50.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Resnet50.mlmodel; sourceTree = "<group>"; };
+		7B640C4D1F53D44100C0D17C /* GoogLeNetPlaces.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = GoogLeNetPlaces.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 		7B4DA20D1F53B27A0037584A = {
 			isa = PBXGroup;
 			children = (
+				7B640C4D1F53D44100C0D17C /* GoogLeNetPlaces.mlmodel */,
 				7B640C4B1F53C1F300C0D17C /* Resnet50.mlmodel */,
 				7B640C491F53BEE500C0D17C /* SqueezeNet.mlmodel */,
 				7B4DA2181F53B27A0037584A /* ObjectCameraRecognitionCoreMLIOS11 */,
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B4DA21C1F53B27A0037584A /* ViewController.swift in Sources */,
+				7B640C4E1F53D44100C0D17C /* GoogLeNetPlaces.mlmodel in Sources */,
 				7B640C4A1F53BEE500C0D17C /* SqueezeNet.mlmodel in Sources */,
 				7B640C4C1F53C1F300C0D17C /* Resnet50.mlmodel in Sources */,
 				7B4DA21A1F53B27A0037584A /* AppDelegate.swift in Sources */,
